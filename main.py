@@ -31,7 +31,7 @@ def midi_to_note_name(midi):
     octave = int(round(midi)) // 12 - 1
     return f"{note_names[note_idx]}{octave}"
 
-PITCH_TOLERANCE_SEMITONES = 0.45  # just under half semitone (50 cents)
+PITCH_TOLERANCE_SEMITONES = 0.5   # 50 cents — standard AP grading tolerance
 HOP_LENGTH = 512
 
 def preprocess_for_pitch(y):
@@ -113,47 +113,11 @@ def average_note_pitch(y, sr, window_start, window_end, hop_length=HOP_LENGTH):
 
     return detected_midi, voiced_times
 
-def detect_energy_onset(y, sr, search_start, search_end, hop_length=HOP_LENGTH):
-    """Find the first significant energy onset in a search region."""
-    win_start = max(0.0, search_start)
-    win_end = min(len(y) / sr, search_end)
-    if win_end - win_start < 0.04:
-        return None
-
-    i0 = int(win_start * sr)
-    i1 = int(win_end * sr)
-    y_clip = y[i0:i1]
-    if len(y_clip) < int(sr * 0.03):
-        return None
-
-    rms = librosa.feature.rms(y=y_clip, hop_length=hop_length)[0]
-    if len(rms) == 0 or np.max(rms) <= 0:
-        return None
-
-    rms_norm = rms / (np.max(rms) + 1e-9)
-    rms_times = librosa.frames_to_time(np.arange(len(rms_norm)), sr=sr, hop_length=hop_length)
-
-    onset_frames = librosa.onset.onset_detect(
-        y=y_clip,
-        sr=sr,
-        hop_length=hop_length,
-        backtrack=True,
-        units="time",
-    )
-    for onset_t in onset_frames:
-        idx = min(int(onset_t / (hop_length / sr)), len(rms_norm) - 1)
-        if rms_norm[idx] >= 0.12:
-            return float(onset_t) + win_start
-
-    for i, level in enumerate(rms_norm):
-        if level >= 0.2:
-            return float(rms_times[i]) + win_start
-
-    return None
 
 def build_note_matches(expected_notes, sung_segments, beat_sec):
     """
-    Match expected notes to sung segments in score order.
+    Match expected notes to sung segments in score order using timing only.
+    Pitch is graded separately so rhythm credit doesn't require pitch accuracy.
     Returns (matches, global_rhythm_offset).
     """
     matches = []
@@ -164,11 +128,11 @@ def build_note_matches(expected_notes, sung_segments, beat_sec):
     for exp in expected_notes:
         exp_start = exp["start"]
         exp_end = exp_start + exp["duration"]
-        search_lo = exp_start - beat_sec * 1.25
-        search_hi = exp_end + beat_sec * 1.0
+        search_lo = exp_start - beat_sec * 1.0
+        search_hi = exp_end + beat_sec * 0.75
 
         best_idx = None
-        best_score = -1e9
+        best_err = float("inf")
 
         for i, sn in enumerate(sung_segments):
             if i in sung_used:
@@ -178,15 +142,9 @@ def build_note_matches(expected_notes, sung_segments, beat_sec):
             if sn["start"] < last_sung_start - 0.05:
                 continue
 
-            pitch_err = abs(sn["midi"] - exp["midi"])
-            if pitch_err > PITCH_TOLERANCE_SEMITONES * 1.5:
-                continue
-
-            center = exp_start + exp["duration"] * 0.35
-            time_err = abs(sn["start"] - center)
-            score = -pitch_err * 12.0 - time_err
-            if score > best_score:
-                best_score = score
+            time_err = abs(sn["start"] - exp_start)
+            if time_err < best_err:
+                best_err = time_err
                 best_idx = i
 
         if best_idx is not None:
@@ -200,15 +158,15 @@ def build_note_matches(expected_notes, sung_segments, beat_sec):
     return matches, global_offset
 
 HM_OVERHANG_SEC = 0.5
-RHYTHM_LENIENCY_BEATS = 0.75
+RHYTHM_LENIENCY_BEATS = 0.5   # AP graders expect notes within half a beat
 
 def rhythm_tolerance_for_note(exp, beat_sec):
-    return max(beat_sec * RHYTHM_LENIENCY_BEATS, exp["duration"] * 0.5, 0.1)
+    return max(beat_sec * RHYTHM_LENIENCY_BEATS, exp["duration"] * 0.4, 0.08)
 
-def grade_note_rhythm(exp, sung_segments, global_offset, y, sr, beat_sec, matched_sung=None):
+def grade_note_rhythm(exp, sung_segments, global_offset, beat_sec, matched_sung=None):
     """
-    Decide if a note's rhythm is correct using matched onset, fallback search,
-    or energy onset detection around the expected time.
+    Decide if a note's rhythm is correct using the matched onset.
+    Falls back to a nearby unmatched segment if no match was found.
     """
     exp_start = exp["start"]
     tolerance = rhythm_tolerance_for_note(exp, beat_sec)
@@ -217,16 +175,13 @@ def grade_note_rhythm(exp, sung_segments, global_offset, y, sr, beat_sec, matche
     if matched_sung is not None:
         candidates.append(matched_sung["start"])
 
-    search_lo = exp_start - beat_sec * 0.75
-    search_hi = exp_start + exp["duration"] + beat_sec * 0.75
-    for sn in sung_segments:
-        if search_lo <= sn["start"] <= search_hi:
-            if abs(sn["midi"] - exp["midi"]) <= PITCH_TOLERANCE_SEMITONES * 1.5:
+    # Secondary: any segment near the expected onset (timing-based only)
+    if not candidates:
+        search_lo = exp_start - beat_sec * 0.75
+        search_hi = exp_start + exp["duration"] + beat_sec * 0.5
+        for sn in sung_segments:
+            if search_lo <= sn["start"] <= search_hi:
                 candidates.append(sn["start"])
-
-    energy_onset = detect_energy_onset(y, sr, search_lo, search_hi)
-    if energy_onset is not None:
-        candidates.append(energy_onset)
 
     if not candidates:
         return False, None
@@ -314,26 +269,29 @@ def median_midi_in_window(y, sr, start, end, hop_length=HOP_LENGTH):
 
 def compute_pitch_shift(notes_data, sung_notes, y, sr):
     """
-    AP sight-singing: starting pitch need not match.
-    Align user audio so first sung note matches the written starting tone.
+    Find the best global transposition so the sung melody matches the written one.
+    Uses median offset across all matched note pairs — more robust than first-note only.
+    AP grading is relative pitch: the singer may start on any pitch.
     """
-    if not notes_data:
+    if not notes_data or not sung_notes:
         return 0
 
-    first_exp = notes_data[0]
-    window_end = first_exp["start"] + first_exp["duration"]
-
-    detected = median_midi_in_window(y, sr, first_exp["start"], window_end)
-    if detected is None:
+    offsets = []
+    for exp in notes_data:
+        best_sn = None
+        best_err = float("inf")
         for sn in sung_notes:
-            if sn["start"] < window_end + 0.25:
-                detected = sn["midi"]
-                break
+            err = abs(sn["start"] - exp["start"])
+            if err < best_err and err < 1.5:
+                best_err = err
+                best_sn = sn
+        if best_sn is not None:
+            offsets.append(best_sn["midi"] - exp["midi"])
 
-    if detected is None:
+    if not offsets:
         return 0
 
-    return int(round(detected - first_exp["midi"]))
+    return int(round(float(np.median(offsets))))
 
 def encode_wav_base64(y, sr):
   buf = io.BytesIO()
@@ -398,8 +356,6 @@ def grade_half_measure(hm, notes_data, y, sr, beat_sec, sung_segments, graded_st
             exp,
             sung_segments,
             rhythm_offset,
-            y,
-            sr,
             beat_sec,
             matched_sung={"start": matched_sung["start"]} if matched_sung else None,
         )

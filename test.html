@@ -10,13 +10,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #121212;
-            --panel-bg: rgba(255, 255, 255, 0.05);
-            --text-color: #e0e0e0;
-            --accent-color: #a855f7;
-            --accent-hover: #c084fc;
-            --success-color: #22c55e;
-            --danger-color: #ef4444;
+            --bg-color: #f5ede0;
+            --panel-bg: rgba(255, 255, 255, 0.55);
+            --text-color: #3d2510;
+            --accent-color: #d96b1a;
+            --accent-hover: #b85510;
+            --success-color: #2d7d3a;
+            --danger-color: #c0392b;
             --border-radius: 12px;
         }
 
@@ -24,7 +24,7 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background: #0d0d0d;
+            background: #ede1cf;
             color: var(--text-color);
             min-height: 100vh;
         }
@@ -40,8 +40,8 @@
             align-items: center;
             gap: 12px;
             padding: 16px 24px;
-            background: #111;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: #c8621a;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.12);
         }
 
         .app-logo {
@@ -61,6 +61,7 @@
             font-weight: 800;
             letter-spacing: -0.3px;
             margin: 0;
+            color: #fff;
         }
 
         .app-body {
@@ -72,8 +73,8 @@
         .sidebar {
             width: 240px;
             flex-shrink: 0;
-            background: #141414;
-            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            background: #e8d9c4;
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
             padding: 24px 20px;
             display: flex;
             flex-direction: column;
@@ -84,7 +85,7 @@
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 1.2px;
-            color: rgba(255, 255, 255, 0.4);
+            color: rgba(61, 37, 16, 0.5);
             font-weight: 600;
             margin-bottom: 4px;
         }
@@ -104,15 +105,15 @@
         }
 
         .audio-section {
-            border: 1px dashed rgba(255, 255, 255, 0.2);
+            border: 1px dashed rgba(0, 0, 0, 0.18);
             border-radius: var(--border-radius);
             padding: 18px 20px;
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(255, 255, 255, 0.35);
         }
 
         .audio-section-hint {
             font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.35);
+            color: rgba(61, 37, 16, 0.5);
             margin-bottom: 12px;
         }
 
@@ -135,10 +136,10 @@
 
         .feedback-table-panel {
             flex: 1;
-            border: 1px dashed rgba(255, 255, 255, 0.2);
+            border: 1px dashed rgba(0, 0, 0, 0.18);
             border-radius: var(--border-radius);
             padding: 14px 16px;
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(255, 255, 255, 0.35);
             min-width: 0;
             display: flex;
             flex-direction: column;
@@ -151,15 +152,16 @@
         }
 
         .score-panel-inner {
-            background: #252525;
+            background: #f0e4d0;
             border-radius: var(--border-radius);
             padding: 18px;
             height: 100%;
             box-sizing: border-box;
+            border: 1px solid rgba(0,0,0,0.08);
         }
 
         .score-panel-placeholder {
-            color: rgba(255, 255, 255, 0.35);
+            color: rgba(61, 37, 16, 0.4);
             font-size: 0.85rem;
             text-align: center;
             padding-top: 80px;
@@ -183,11 +185,11 @@
             background: var(--panel-bg);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.1);
             border-radius: var(--border-radius);
             padding: 25px;
             margin-bottom: 25px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.08);
             transition: transform 0.2s ease;
         }
 
@@ -210,7 +212,7 @@
             font-size: 0.85rem;
             font-weight: 600;
             margin-bottom: 8px;
-            color: #ccc;
+            color: #6b4020;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
@@ -218,16 +220,16 @@
         select, input[type="range"] {
             padding: 10px;
             font-size: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(0, 0, 0, 0.18);
             border-radius: 6px;
-            background: rgba(0, 0, 0, 0.2);
-            color: white;
+            background: rgba(255, 255, 255, 0.6);
+            color: #3d2510;
             outline: none;
         }
 
         select option {
-            background: #222;
-            color: white;
+            background: #f5ede0;
+            color: #3d2510;
         }
 
         button {
@@ -250,7 +252,7 @@
         }
 
         button:disabled {
-            background: #666;
+            background: #b0967a;
             cursor: not-allowed;
             opacity: 0.5;
         }
@@ -263,8 +265,8 @@
             border-radius: 8px;
         }
 
-        .audio-btn { background: #3b82f6; min-width: 0; flex: 1 1 auto; }
-        .audio-btn:hover:not(:disabled) { background: #3b82f6; opacity: 0.88; }
+        .audio-btn { background: #7a5230; min-width: 0; flex: 1 1 auto; }
+        .audio-btn:hover:not(:disabled) { background: #7a5230; opacity: 0.88; }
         
         .record-btn { background: #ef4444; min-width: 0; flex: 1 1 auto; }
         .record-btn:hover:not(:disabled) { background: #ef4444; opacity: 0.88; }
@@ -304,7 +306,7 @@
 
         .loader {
             display: none;
-            border: 4px solid rgba(255,255,255,0.1);
+            border: 4px solid rgba(0,0,0,0.1);
             border-top: 4px solid var(--accent-color);
             border-radius: 50%;
             width: 24px;
@@ -360,14 +362,14 @@
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: rgba(255, 255, 255, 0.45);
+            color: rgba(61, 37, 16, 0.5);
             font-weight: 600;
         }
 
         .score-value {
             font-size: 2.2rem;
             font-weight: 800;
-            color: #c084fc;
+            color: #c85e10;
             line-height: 1;
         }
 
@@ -377,7 +379,7 @@
 
         .score-max {
             font-size: 1.1rem;
-            color: rgba(255,255,255,0.4);
+            color: rgba(61,37,16,0.4);
             font-weight: 500;
         }
 
@@ -392,18 +394,18 @@
             align-items: center;
             justify-content: space-between;
             padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
         }
 
         .breakdown-label {
             font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.55);
+            color: rgba(61, 37, 16, 0.6);
         }
 
         .breakdown-value {
             font-weight: 600;
             font-size: 0.85rem;
-            color: #d8b4fe;
+            color: #c85e10;
         }
 
         /* ── Vertical Half-Measure List ── */
@@ -419,14 +421,14 @@
             font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: rgba(255, 255, 255, 0.35);
+            color: rgba(61, 37, 16, 0.45);
             font-weight: 600;
             margin-bottom: 10px;
             flex-shrink: 0;
         }
 
         .comparison-placeholder {
-            color: rgba(255, 255, 255, 0.3);
+            color: rgba(61, 37, 16, 0.35);
             font-size: 0.85rem;
             text-align: center;
             padding: 40px 10px;
@@ -450,14 +452,15 @@
             align-items: center;
             gap: 10px;
             padding: 10px 12px;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.45);
             border-radius: 8px;
+            border: 1px solid rgba(0,0,0,0.06);
         }
 
         .hm-row-label {
             font-size: 0.8rem;
             font-weight: 700;
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(61, 37, 16, 0.65);
             width: 36px;
             flex-shrink: 0;
         }
@@ -534,7 +537,7 @@
         }
 
         .play-btn.expected-btn {
-            background: #22c55e;
+            background: #2d7d3a;
         }
 
         .play-btn.expected-btn:hover {
@@ -544,7 +547,7 @@
         }
 
         .play-btn.yours-btn {
-            background: #a855f7;
+            background: #d96b1a;
         }
 
         .play-btn.yours-btn:hover:not(:disabled) {
@@ -588,7 +591,7 @@
             font-weight: 800;
             color: white;
             animation: countPop 0.6s ease-out;
-            text-shadow: 0 0 40px rgba(106, 17, 203, 0.6);
+            text-shadow: 0 0 40px rgba(217, 107, 26, 0.7);
         }
 
         @keyframes countPop {
@@ -599,7 +602,7 @@
 
         @media (max-width: 900px) {
             .app-body { flex-direction: column; }
-            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid rgba(0,0,0,0.1); }
             .feedback-section { flex-direction: column; }
             .score-panel { width: 100%; }
         }
@@ -776,6 +779,19 @@
         }
     }
     
+    function scheduleMetronomeClick(time, isAccent) {
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        osc.connect(gain);
+        gain.connect(audioContext.destination);
+        osc.frequency.value = isAccent ? 1000 : 750;
+        gain.gain.setValueAtTime(0, time);
+        gain.gain.linearRampToValueAtTime(isAccent ? 0.35 : 0.22, time + 0.005);
+        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.09);
+        osc.start(time);
+        osc.stop(time + 0.1);
+    }
+
     function stopComparisonAudio() {
         if (activeComparisonSource) {
             try { activeComparisonSource.stop(); } catch(e) {}
@@ -1078,16 +1094,15 @@
 
     async function toggleRecording() {
         const btn = document.getElementById('btn-record');
-        
+
         if (isRecording) {
             if (recordingAutoStopTimer) {
                 clearTimeout(recordingAutoStopTimer);
                 recordingAutoStopTimer = null;
             }
-            stopAudio();
             mediaRecorder.stop();
             isRecording = false;
-            btn.innerHTML = "🔴 Start Recording";
+            btn.textContent = "Record";
             btn.classList.remove('recording');
             btn.style.background = "";
             return;
@@ -1104,15 +1119,14 @@
             };
 
             mediaRecorder.onstop = async () => {
-                stopAudio();
                 stream.getTracks().forEach(track => track.stop());
                 const blob = new Blob(recordedChunks, { type: 'audio/webm' });
-                
+
                 const audioUrl = URL.createObjectURL(blob);
                 document.getElementById('audio-playback').src = audioUrl;
                 document.getElementById('playback-controls').style.display = 'block';
 
-                // Decode the blob into an AudioBuffer for slice playback
+                // Keep original (un-shifted) audio for "Yours" playback
                 try {
                     const arrayBuf = await blob.arrayBuffer();
                     recordedAudioBuffer = await audioContext.decodeAudioData(arrayBuf);
@@ -1129,56 +1143,56 @@
             document.getElementById('btn-play-all').disabled = true;
 
             const bpm = parseInt(document.getElementById('tempo').value, 10);
-            const totalMetronomeSec = leadInSeconds + totalScoreDurationSec + 0.5;
-            const totalMetronomeMeasures = Math.max(2, Math.ceil(totalMetronomeSec / leadInSeconds));
-            const metronomeAbc = buildMetronomeAbc(bpm, totalMetronomeMeasures);
-            
-            activeSynth = new ABCJS.synth.CreateSynth();
-            await activeSynth.init({
-                audioContext: audioContext,
-                visualObj: ABCJS.renderAbc(document.createElement("div"), metronomeAbc)[0],
-                options: { soundFontUrl: "https://paulrosen.github.io/midi-js-soundfonts/FluidR3_GM/" }
-            });
-            await activeSynth.prime();
-            activeSynth.start();
+            const beatDurSec = 60.0 / bpm;
 
-            // Show countdown overlay
+            let beatsPerMeasure = parseInt(currentMeter.split('/')[0]);
+            if (currentMeter === '6/8') beatsPerMeasure = 6;
+
+            // Schedule precise Web Audio clicks for lead-in + full melody duration
+            const clickStartTime = audioContext.currentTime + 0.15;
+            const totalClickBeats = beatsPerMeasure + Math.ceil((totalScoreDurationSec + 1.0) / beatDurSec);
+            for (let i = 0; i < totalClickBeats; i++) {
+                scheduleMetronomeClick(
+                    clickStartTime + i * beatDurSec,
+                    i % beatsPerMeasure === 0
+                );
+            }
+
+            // Countdown display — driven by AudioContext time so it stays in sync
             const overlay = document.getElementById('countdown-overlay');
             const countdownNum = document.getElementById('countdown-number');
             overlay.classList.add('active');
 
-            let beatsPerMeasure = parseInt(currentMeter.split('/')[0]);
-            if (currentMeter === '6/8') beatsPerMeasure = 6;
-            const beatDurationMs = (60.0 / bpm) * 1000;
-            const countdownBeatMs = currentMeter === '6/8' ? beatDurationMs / 2 : beatDurationMs;
-            
             let beatCount = 0;
-            const totalCountdownBeats = currentMeter === '6/8' ? 6 : beatsPerMeasure;
-
-            function showNextBeat() {
-                beatCount++;
-                if (beatCount > totalCountdownBeats) {
+            function scheduleCountdownBeat() {
+                if (beatCount >= beatsPerMeasure) {
                     overlay.classList.remove('active');
                     return;
                 }
-                countdownNum.textContent = beatCount;
-                countdownNum.style.animation = 'none';
-                void countdownNum.offsetWidth;
-                countdownNum.style.animation = 'countPop 0.6s ease-out';
-                setTimeout(showNextBeat, countdownBeatMs);
+                const beatTime = clickStartTime + beatCount * beatDurSec;
+                const delayMs = Math.max(0, (beatTime - audioContext.currentTime) * 1000);
+                setTimeout(() => {
+                    beatCount++;
+                    countdownNum.textContent = beatCount;
+                    countdownNum.style.animation = 'none';
+                    void countdownNum.offsetWidth;
+                    countdownNum.style.animation = 'countPop 0.6s ease-out';
+                    scheduleCountdownBeat();
+                }, delayMs);
             }
-            showNextBeat();
+            scheduleCountdownBeat();
 
-            btn.innerHTML = "⏳ Wait...";
-            btn.style.background = "#ff9800";
+            btn.textContent = "Wait...";
+            btn.style.background = "#c85e10";
             btn.disabled = true;
 
-            const leadInEndTime = audioContext.currentTime + leadInSeconds;
+            // Start recording exactly when lead-in ends, tracked via AudioContext clock
+            const leadInEndTime = clickStartTime + beatsPerMeasure * beatDurSec;
             function waitForLeadIn() {
                 if (!isRecording) return;
                 if (audioContext.currentTime >= leadInEndTime) {
                     mediaRecorder.start();
-                    btn.innerHTML = "⏹ Recording...";
+                    btn.textContent = "Stop Recording";
                     btn.style.background = "";
                     btn.classList.add('recording');
                     btn.disabled = false;
@@ -1186,9 +1200,8 @@
                     recordingAutoStopTimer = setTimeout(() => {
                         if (isRecording) {
                             isRecording = false;
-                            stopAudio();
                             mediaRecorder.stop();
-                            btn.innerHTML = "🔴 Start Recording";
+                            btn.textContent = "Record";
                             btn.classList.remove('recording');
                             btn.style.background = "";
                             recordingAutoStopTimer = null;
@@ -1275,17 +1288,7 @@
             
             if (data.half_measure_results || data.results) {
                 pitchShiftSemitones = data.pitch_shift_semitones || 0;
-
-                if (data.aligned_audio_base64) {
-                    try {
-                        const binary = atob(data.aligned_audio_base64);
-                        const bytes = new Uint8Array(binary.length);
-                        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-                        recordedAudioBuffer = await audioContext.decodeAudioData(bytes.buffer.slice(0));
-                    } catch (e) {
-                        console.warn("Could not decode pitch-aligned audio:", e);
-                    }
-                }
+                // recordedAudioBuffer keeps the original recording — no pitch shift on playback
 
                 const results = data.half_measure_results || data.results;
                 renderComparisonTable(results);
